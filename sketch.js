@@ -48,6 +48,38 @@ function draw() {
           noStroke();
           circle(keypoint.x, keypoint.y, 16);
         }
+
+        // Draw lines connecting keypoints 5-8
+        for (let i = 5; i < 8; i++) {
+          let kp1 = hand.keypoints[i];
+          let kp2 = hand.keypoints[i + 1];
+          stroke(0, 255, 0);
+          line(kp1.x, kp1.y, kp2.x, kp2.y);
+        }
+
+        // Draw lines connecting keypoints 9-12
+        for (let i = 9; i < 12; i++) {
+          let kp1 = hand.keypoints[i];
+          let kp2 = hand.keypoints[i + 1];
+          stroke(0, 255, 0);
+          line(kp1.x, kp1.y, kp2.x, kp2.y);
+        }
+
+        // Draw lines connecting keypoints 13-16
+        for (let i = 13; i < 16; i++) {
+          let kp1 = hand.keypoints[i];
+          let kp2 = hand.keypoints[i + 1];
+          stroke(0, 255, 0);
+          line(kp1.x, kp1.y, kp2.x, kp2.y);
+        }
+
+        // Draw lines connecting keypoints 17-20
+        for (let i = 17; i < 20; i++) {
+          let kp1 = hand.keypoints[i];
+          let kp2 = hand.keypoints[i + 1];
+          stroke(0, 255, 0);
+          line(kp1.x, kp1.y, kp2.x, kp2.y);
+        }
       }
     }
   }
