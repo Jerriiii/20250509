@@ -9,6 +9,7 @@ let isDragging = false;
 let previousX = null;
 let previousY = null;
 let circleColor = [0, 0, 255, 150]; // 初始圓的顏色為藍色
+let trajectory = []; // 用於存儲軌跡的陣列
 
 function preload() {
   // Initialize HandPose model with flipped video input
@@ -39,7 +40,16 @@ function setup() {
 function draw() {
   image(video, 0, 0);
 
-  // 繪製中央的圓形，顏色隨畫線顏色改變
+  // 畫出已存儲的軌跡
+  strokeWeight(2);
+  for (let i = 1; i < trajectory.length; i++) {
+    let prev = trajectory[i - 1];
+    let curr = trajectory[i];
+    stroke(curr.color);
+    line(prev.x, prev.y, curr.x, curr.y);
+  }
+
+  // 繪製中央的圓形
   fill(circleColor);
   noStroke();
   circle(circleX, circleY, circleRadius * 2);
@@ -74,18 +84,18 @@ function draw() {
           isDragging = true;
 
           // 根據手的屬性（左手或右手）設定軌跡顏色與圓的顏色
+          let color;
           if (hand.handedness === "Right") {
-            stroke(255, 0, 0); // 紅色線條（右手）
+            color = [255, 0, 0]; // 紅色線條（右手）
             circleColor = [255, 0, 0, 150]; // 紅色圓
           } else if (hand.handedness === "Left") {
-            stroke(0, 255, 0); // 綠色線條（左手）
+            color = [0, 255, 0]; // 綠色線條（左手）
             circleColor = [0, 255, 0, 150]; // 綠色圓
           }
-          strokeWeight(2);
 
-          // 畫出圓心的軌跡
+          // 畫出圓心的軌跡並存儲
           if (previousX !== null && previousY !== null) {
-            line(previousX, previousY, circleX, circleY);
+            trajectory.push({ x: circleX, y: circleY, color });
           }
           previousX = circleX;
           previousY = circleY;
@@ -98,7 +108,7 @@ function draw() {
     }
   }
 
-  // 停止拖動並清除軌跡的起點
+  // 停止拖動並清除軌跡
   if (!hands.some(hand => {
     let indexFinger = hand.keypoints[8];
     let thumb = hand.keypoints[4];
@@ -109,6 +119,7 @@ function draw() {
     isDragging = false;
     previousX = null;
     previousY = null;
+    trajectory = []; // 清除軌跡
     circleColor = [0, 0, 255, 150]; // 恢復圓的顏色為藍色
   }
 }
