@@ -8,6 +8,7 @@ let circleX, circleY, circleRadius = 50; // 圓的初始位置與半徑
 let isDragging = false;
 let previousX = null;
 let previousY = null;
+let circleColor = [0, 0, 255, 150]; // 初始圓的顏色為藍色
 
 function preload() {
   // Initialize HandPose model with flipped video input
@@ -38,8 +39,8 @@ function setup() {
 function draw() {
   image(video, 0, 0);
 
-  // 繪製中央的圓形
-  fill(0, 0, 255, 150);
+  // 繪製中央的圓形，顏色隨畫線顏色改變
+  fill(circleColor);
   noStroke();
   circle(circleX, circleY, circleRadius * 2);
 
@@ -72,11 +73,13 @@ function draw() {
         if (dIndex < circleRadius && dThumb < circleRadius) {
           isDragging = true;
 
-          // 根據手的屬性（左手或右手）設定軌跡顏色
+          // 根據手的屬性（左手或右手）設定軌跡顏色與圓的顏色
           if (hand.handedness === "Right") {
             stroke(255, 0, 0); // 紅色線條（右手）
+            circleColor = [255, 0, 0, 150]; // 紅色圓
           } else if (hand.handedness === "Left") {
             stroke(0, 255, 0); // 綠色線條（左手）
+            circleColor = [0, 255, 0, 150]; // 綠色圓
           }
           strokeWeight(2);
 
@@ -106,6 +109,7 @@ function draw() {
     isDragging = false;
     previousX = null;
     previousY = null;
+    circleColor = [0, 0, 255, 150]; // 恢復圓的顏色為藍色
   }
 }
 
