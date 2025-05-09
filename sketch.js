@@ -41,14 +41,12 @@ function draw() {
   image(video, 0, 0);
 
   // 畫出已存儲的軌跡
-  if (isDragging) {
-    strokeWeight(2);
-    stroke(255, 0, 0); // 紅色線條
-    for (let i = 1; i < trajectory.length; i++) {
-      let prev = trajectory[i - 1];
-      let curr = trajectory[i];
-      line(prev.x, prev.y, curr.x, curr.y);
-    }
+  strokeWeight(2);
+  stroke(255, 0, 0); // 紅色線條
+  for (let i = 1; i < trajectory.length; i++) {
+    let prev = trajectory[i - 1];
+    let curr = trajectory[i];
+    line(prev.x, prev.y, curr.x, curr.y);
   }
 
   // 繪製中央的圓形
