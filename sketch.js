@@ -54,13 +54,14 @@ function draw() {
         }
 
         // 繪製手指的線條
+        drawFingerLines(hand, 0, 4);  // 大拇指
         drawFingerLines(hand, 5, 8);  // 食指
         drawFingerLines(hand, 9, 12); // 中指
         drawFingerLines(hand, 13, 16); // 無名指
         drawFingerLines(hand, 17, 20); // 小指
 
-        // 確保 keypoints 5 到 8 的連線
-        for (let i = 5; i < 8; i++) {
+        // 確保 keypoints 0 到 4 的連線
+        for (let i = 0; i < 4; i++) {
           let kp1 = hand.keypoints[i];
           let kp2 = hand.keypoints[i + 1];
           stroke(0, 255, 0);
