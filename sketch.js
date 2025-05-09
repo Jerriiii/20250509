@@ -59,26 +59,43 @@ function draw() {
         drawFingerLines(hand, 13, 16); // 無名指
         drawFingerLines(hand, 17, 20); // 小指
 
-        // 獲取食指的座標 (keypoints[8])
-        let indexFinger = hand.keypoints[8];
+        // 串接 keypoints 5 到 8
+        for (let i = 5; i < 8; i++) {
+          let kp1 = hand.keypoints[i];
+          let kp2 = hand.keypoints[i + 1];
+          stroke(0, 255, 0);
+          strokeWeight(2);
+          line(kp1.x, kp1.y, kp2.x, kp2.y);
+        }
 
-        // 檢查食指是否碰觸中央的圓形
-        let d = dist(indexFinger.x, indexFinger.y, circleX, circleY);
-        if (d < circleRadius) {
+        // 獲取食指與大拇指的座標
+        let indexFinger = hand.keypoints[8];
+        let thumb = hand.keypoints[4];
+
+        // 檢查食指與大拇指是否同時碰觸圓的邊緣
+        let dIndex = dist(indexFinger.x, indexFinger.y, circleX, circleY);
+        let dThumb = dist(thumb.x, thumb.y, circleX, circleY);
+        if (dIndex < circleRadius && dThumb < circleRadius) {
           isDragging = true;
         }
 
-        // 如果正在拖動，讓圓跟隨食指移動
+        // 如果正在拖動，讓圓跟隨手指移動
         if (isDragging) {
-          circleX = indexFinger.x;
-          circleY = indexFinger.y;
+          circleX = (indexFinger.x + thumb.x) / 2; // 圓心移動到兩指之間
+          circleY = (indexFinger.y + thumb.y) / 2;
         }
       }
     }
   }
 
   // 停止拖動
-  if (!hands.some(hand => hand.keypoints[8])) {
+  if (!hands.some(hand => {
+    let indexFinger = hand.keypoints[8];
+    let thumb = hand.keypoints[4];
+    let dIndex = dist(indexFinger.x, indexFinger.y, circleX, circleY);
+    let dThumb = dist(thumb.x, thumb.y, circleX, circleY);
+    return dIndex < circleRadius && dThumb < circleRadius;
+  })) {
     isDragging = false;
   }
 }
@@ -91,4 +108,5 @@ function drawFingerLines(hand, startIdx, endIdx) {
     stroke(0, 255, 0);
     strokeWeight(2);
     line(kp1.x, kp1.y, kp2.x, kp2.y);
-  }  }
+  }
+}
