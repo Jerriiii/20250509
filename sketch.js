@@ -59,7 +59,7 @@ function draw() {
         drawFingerLines(hand, 13, 16); // 無名指
         drawFingerLines(hand, 17, 20); // 小指
 
-        // 串接 keypoints 5 到 8
+        // 確保 keypoints 5 到 8 的連線
         for (let i = 5; i < 8; i++) {
           let kp1 = hand.keypoints[i];
           let kp2 = hand.keypoints[i + 1];
