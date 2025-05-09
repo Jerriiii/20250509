@@ -6,6 +6,8 @@ let handPose;
 let hands = [];
 let circleX, circleY, circleRadius = 50; // 圓的初始位置與半徑
 let isDragging = false;
+let previousX = null;
+let previousY = null;
 
 function preload() {
   // Initialize HandPose model with flipped video input
@@ -60,15 +62,6 @@ function draw() {
         drawFingerLines(hand, 13, 16); // 無名指
         drawFingerLines(hand, 17, 20); // 小指
 
-        // 確保 keypoints 0 到 4 的連線
-        for (let i = 0; i < 4; i++) {
-          let kp1 = hand.keypoints[i];
-          let kp2 = hand.keypoints[i + 1];
-          stroke(0, 255, 0);
-          strokeWeight(2);
-          line(kp1.x, kp1.y, kp2.x, kp2.y);
-        }
-
         // 獲取食指與大拇指的座標
         let indexFinger = hand.keypoints[8];
         let thumb = hand.keypoints[4];
@@ -78,10 +71,23 @@ function draw() {
         let dThumb = dist(thumb.x, thumb.y, circleX, circleY);
         if (dIndex < circleRadius && dThumb < circleRadius) {
           isDragging = true;
-        }
 
-        // 如果正在拖動，讓圓跟隨手指移動
-        if (isDragging) {
+          // 根據手的屬性（左手或右手）設定軌跡顏色
+          if (hand.handedness === "Right") {
+            stroke(255, 0, 0); // 紅色線條（右手）
+          } else if (hand.handedness === "Left") {
+            stroke(0, 255, 0); // 綠色線條（左手）
+          }
+          strokeWeight(2);
+
+          // 畫出圓心的軌跡
+          if (previousX !== null && previousY !== null) {
+            line(previousX, previousY, circleX, circleY);
+          }
+          previousX = circleX;
+          previousY = circleY;
+
+          // 更新圓心位置
           circleX = (indexFinger.x + thumb.x) / 2; // 圓心移動到兩指之間
           circleY = (indexFinger.y + thumb.y) / 2;
         }
@@ -89,7 +95,7 @@ function draw() {
     }
   }
 
-  // 停止拖動
+  // 停止拖動並清除軌跡的起點
   if (!hands.some(hand => {
     let indexFinger = hand.keypoints[8];
     let thumb = hand.keypoints[4];
@@ -98,6 +104,8 @@ function draw() {
     return dIndex < circleRadius && dThumb < circleRadius;
   })) {
     isDragging = false;
+    previousX = null;
+    previousY = null;
   }
 }
 
